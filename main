@@ -1,0 +1,21 @@
+#!/bin/env sh
+
+set -e
+
+for pkg in pkg/*; do
+    # shellcheck disable=SC1090
+    . "$pkg"
+done
+
+for pkg in internal/*; do
+    # shellcheck disable=SC1090
+    . "$pkg"
+done
+
+main() {
+    installtheme
+    installicons
+    installfonts
+}
+
+main "$@"
