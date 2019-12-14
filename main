@@ -13,9 +13,28 @@ for pkg in internal/*; do
 done
 
 main() {
+    printf "Installing theme..."
     installtheme
+    printf "Done\\n"
+
+    printf "Installing icons..."
     installicons
+    printf "Done\\n"
+
+    printf "Installing fonts..."
     installfonts
+    printf "Done\\n"
+
+    printf "Installing panel..."
+    changepanel resources/panel.xml resources/whisker.rc
+    printf "Done\\n"
+
+    printf "Installing wallpaper..."
+    changewallpaper resources/wallpaper.png
+    printf "Done\\n"
+
+
+    echo "All done!"
 }
 
 main "$@"
