@@ -13,10 +13,15 @@ changeicon() {
 }
 
 changepanel() {
-  pkill xfconfd
-  pkill xfce4-panel
-  cp "$1" ~/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml
-  cp "$2" ~/.config/xfce4/panel/whiskermenu-1.rc
+  if pgrep xfconfd > /dev/null; then
+    pkill xfconfd
+  fi
+  if pgrep xfce4-panel > /dev/null; then
+    pkill xfce4-panel
+  fi
+  cp -r "$1" ~/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml
+  rm -rf ~/.config/xfce4/panel/*
+  cp -r "$2/"* ~/.config/xfce4/panel/
   xfce4-panel >/dev/null 2>&1 &
   /usr/lib/x86_64-linux-gnu/xfce4/xfconf/xfconfd >/dev/null 2>&1 &
 }
@@ -34,10 +39,12 @@ changewallpaper() {
   cp "$1" ~/.backgrounds/wallpaper
 
   property="$(xfconf-query -c xfce4-desktop -l | grep image-path | head -n 1)"
-  echo "$property"
   xfconf-query -c xfce4-desktop -p "$property" -s ~/.backgrounds/wallpaper
 
   property="$(xfconf-query -c xfce4-desktop -l | grep workspace | grep last-image | head -n 1)"
-  echo "$property"
   xfconf-query -c xfce4-desktop -p "$property" -s ~/.backgrounds/wallpaper
+}
+
+changecursor(){
+  xfconf-query -c xsettings -p /Gtk/CursorThemeName -s "$1"
 }
