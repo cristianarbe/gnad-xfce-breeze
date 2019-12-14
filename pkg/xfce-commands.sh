@@ -13,15 +13,24 @@ changeicon() {
 }
 
 changepanel() {
-  if pgrep xfconfd > /dev/null; then
+  if test -z "$1"; then
+    echo "must provide at least 1 argument"
+    exit 1
+  fi
+
+  if pgrep xfconfd >/dev/null; then
     pkill xfconfd
   fi
-  if pgrep xfce4-panel > /dev/null; then
+
+  if pgrep xfce4-panel >/dev/null; then
     pkill xfce4-panel
   fi
+
   cp -r "$1" ~/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml
-  rm -rf ~/.config/xfce4/panel/*
-  cp -r "$2/"* ~/.config/xfce4/panel/
+  if test -n "$2"; then
+    rm -rf ~/.config/xfce4/panel/*
+    cp -r "$2"/* ~/.config/xfce4/panel/
+  fi
   xfce4-panel >/dev/null 2>&1 &
   /usr/lib/x86_64-linux-gnu/xfce4/xfconf/xfconfd >/dev/null 2>&1 &
 }
@@ -45,6 +54,6 @@ changewallpaper() {
   xfconf-query -c xfce4-desktop -p "$property" -s ~/.backgrounds/wallpaper
 }
 
-changecursor(){
+changecursor() {
   xfconf-query -c xsettings -p /Gtk/CursorThemeName -s "$1"
 }
